@@ -1,2 +1,2 @@
 export * from './deployFundMe';
-// export * from './interactFundMe';
+export * from './interactFundMe';
