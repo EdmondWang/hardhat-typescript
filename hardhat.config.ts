@@ -16,7 +16,7 @@ const config: HardhatUserConfig = {
     sepolia: {
       url: SEPOLIA_URL,
       accounts: [PRIVATE_KEY_1, PRIVATE_KEY_2],
-      chainId: 11155111,
+      chainId: 11155111, // The network identifier to sepolia testnet
     },
   },
   etherscan: {
