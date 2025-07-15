@@ -5,7 +5,7 @@ task('interactFundMe', 'interact with FundMe contract')
   .addParam('addr', 'fundMe contract address')
   .setAction(async (taskArgs, hre) => {
     const fundMeFactory = await hre.ethers.getContractFactory('FundMe');
-    const fundMe = fundMeFactory.attach(taskArgs.addr) as FundMe;
+    const fundMe = fundMeFactory.attach(taskArgs.addr) as unknown as FundMe;
     const [firstAcct, secondAcct] = await hre.ethers.getSigners();
 
     console.log('First Account');

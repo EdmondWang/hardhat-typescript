@@ -6,6 +6,11 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true
-  }
+    "resolveJsonModule": true,
+    "outDir": "./dist",
+    "types": ["node", "mocha", "chai", "hardhat"]
+  },
+  "include": ["test/**/*.ts", "scripts/**/*.ts"],
+  "exclude": ["node_modules"],
+  "files": ["./hardhat.config.ts"]
 }
