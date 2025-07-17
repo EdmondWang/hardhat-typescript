@@ -15,7 +15,7 @@ contract FundMe {
 
     uint256 constant FUND_TARGET_VALUE = 10 * 10**18; // 10 USD * 10^18
 
-    AggregatorV3Interface internal dataFeed;
+    AggregatorV3Interface public dataFeed;
 
     address public owner;
 
