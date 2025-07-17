@@ -1,6 +1,7 @@
 import { HardhatUserConfig } from 'hardhat/config';
 import { config as envConfig } from '@chainlink/env-enc';
 import '@nomicfoundation/hardhat-toolbox';
+import 'hardhat-deploy';
 import './tasks';
 
 envConfig();
@@ -22,6 +23,14 @@ const config: HardhatUserConfig = {
   etherscan: {
     apiKey: {
       sepolia: ETHERSCAN_API_TOKEN,
+    },
+  },
+  namedAccounts: {
+    firstAccount: {
+      default: 0, // index of networks.sepolia.accounts
+    },
+    secondAccount: {
+      default: 1,
     },
   },
 };

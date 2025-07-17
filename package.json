@@ -21,5 +21,8 @@
     "@chainlink/env-enc": "^1.0.5",
     "@nomicfoundation/hardhat-toolbox": "^6.0.0",
     "hardhat": "^2.25.0"
+  },
+  "dependencies": {
+    "hardhat-deploy": "^1.0.4"
   }
 }

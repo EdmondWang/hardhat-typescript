@@ -10,7 +10,7 @@
     "outDir": "./dist",
     "types": ["node", "mocha", "chai", "hardhat"]
   },
-  "include": ["test/**/*.ts", "scripts/**/*.ts"],
+  "include": ["test/**/*.ts", "**/*.ts"],
   "exclude": ["node_modules"],
   "files": ["./hardhat.config.ts"]
 }
