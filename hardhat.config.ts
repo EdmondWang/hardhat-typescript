@@ -12,6 +12,7 @@ const SEPOLIA_URL: string = process.env.SEPOLIA_URL as string;
 const ETHERSCAN_API_TOKEN: string = process.env.ETHERSCAN_API_TOKEN as string;
 
 const config: HardhatUserConfig = {
+  defaultNetwork: 'hardhat',
   solidity: '0.8.28',
   networks: {
     sepolia: {
@@ -27,7 +28,7 @@ const config: HardhatUserConfig = {
   },
   namedAccounts: {
     firstAccount: {
-      default: 0, // index of networks.sepolia.accounts
+      default: 0, // index of in the array of "networks.sepolia.accounts"
     },
     secondAccount: {
       default: 1,
