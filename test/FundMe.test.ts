@@ -17,7 +17,7 @@ describe('test fundme contract', () => {
     secondAcct = (await getNamedAccounts()).secondAccount;
     const fundMeDeployment = await deployments.get('FundMe');
     fundMe = await ethers.getContractAt('FundMe', fundMeDeployment.address);
-    fundMeSecondAcct = await ethers.getContractAt('FundMe', secondAcct);
+    fundMeSecondAcct = await ethers.getContract('FundMe', secondAcct);
     mockV3Aggregator = await deployments.get('MockV3Aggregator');
   });
 
@@ -58,6 +58,21 @@ describe('test fundme contract', () => {
   });
 
   describe('getFund', () => {
+    it('should throw window is not closed', async () => {
+      await fundMe.fund({ value: ethers.parseEther('0.0005') });
+      await expect(fundMe.getFund()).to.be.revertedWith('Window is not closed');
+    });
+
+    it('should throw target not reached', async () => {
+      await fundMe.fund({ value: ethers.parseEther('0.0005') });
+
+      // make sure the window is closed
+      await time.increase(200);
+      await mine();
+
+      await expect(fundMe.getFund()).to.be.revertedWith('Target is not reached');
+    });
+
     it('should only owner to call', async () => {
       await fundMe.fund({ value: ethers.parseEther('0.004') });
 
@@ -65,7 +80,7 @@ describe('test fundme contract', () => {
       await time.increase(200);
       await mine();
 
-      await expect(fundMeSecondAcct.getFund()).to.be.revertedWith('Only owner can call this function');
+      await expect(fundMeSecondAcct.getFund()).to.be.revertedWith('this function can only be called by owner');
     });
   });
 });
