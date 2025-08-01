@@ -17,18 +17,21 @@ const deployFunc: DeployFunction = async function ({
 
   const { deploy } = deployments;
 
-  let dataFeedAddr: string;
+  let dataFeedAddr: string = '';
+  let confirmations = 0;
   if (developmentChains.includes(network.name)) {
     dataFeedAddr = (await deployments.get('MockV3Aggregator')).address;
+    confirmations = 0;
   } else {
     dataFeedAddr = networkConfig[network.config.chainId as number].ethUsdPriceFeed;
+    confirmations = CONFIRMATIONS; // Wait for 5 block confirmation on sepolia testnet
   }
 
   const fundMe = await deploy('FundMe', {
     from: firstAcct,
     args: [LOCK_TIME, dataFeedAddr],
     log: true,
-    waitConfirmations: CONFIRMATIONS, // Wait for 5 block confirmation
+    waitConfirmations: confirmations,
   });
 
   console.log('network.config.chainId:', network.config.chainId);

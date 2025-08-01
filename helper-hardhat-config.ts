@@ -1,5 +1,5 @@
 export const DECIMAL = 8;
-export const INITIAL_ANSWER = 300000000000; // 3000 USD, because of 8 decimals
+export const INITIAL_ANSWER = 250000000000; // 2500 USD, because of 8 decimals
 export const LOCK_TIME = 180;
 export const CONFIRMATIONS = 5;
 

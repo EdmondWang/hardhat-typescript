@@ -2,16 +2,23 @@ import { ethers, deployments, getNamedAccounts } from 'hardhat'; // Attention he
 import { expect } from 'chai';
 import { FundMe } from '../typechain-types/contracts/FundMe';
 import { Address } from 'hardhat-deploy/types';
+import { mine, time } from '@nomicfoundation/hardhat-network-helpers';
 
 describe('test fundme contract', () => {
   let fundMe: FundMe;
+  let fundMeSecondAcct: FundMe;
   let firstAcct: Address;
+  let secondAcct: Address;
+  let mockV3Aggregator: any;
 
   beforeEach(async () => {
     await deployments.fixture(['all']); // all is tag
     firstAcct = (await getNamedAccounts()).firstAccount;
+    secondAcct = (await getNamedAccounts()).secondAccount;
     const fundMeDeployment = await deployments.get('FundMe');
     fundMe = await ethers.getContractAt('FundMe', fundMeDeployment.address);
+    fundMeSecondAcct = await ethers.getContractAt('FundMe', secondAcct);
+    mockV3Aggregator = await deployments.get('MockV3Aggregator');
   });
 
   it('owner should be msg.sender', async () => {
@@ -27,6 +34,38 @@ describe('test fundme contract', () => {
     // const fundMeFactory = await ethers.getContractFactory('FundMe');
     // const fundMe = (await fundMeFactory.deploy(180)) as unknown as FundMe;
     await fundMe.waitForDeployment();
-    expect(await fundMe.dataFeed()).to.equal('0x694AA1769357215DE4FAC081bf1f309aDC325306');
+    expect(await fundMe.dataFeed()).to.equal(mockV3Aggregator.address);
+  });
+
+  describe('fund', () => {
+    it('should fund failed if value greater than minimum, but window is closed', async () => {
+      // make sure the window is closed
+      await time.increase(200);
+      await mine();
+
+      await expect(fundMe.fund({ value: ethers.parseEther('2') })).to.be.revertedWith('Window is closed');
+    });
+
+    it('should failed to fund if value is less then minimum value', async () => {
+      await expect(fundMe.fund({ value: ethers.parseEther('0.0003') })).to.be.revertedWith('Send more ETH');
+    });
+
+    it('should fund with success', async () => {
+      await fundMe.fund({ value: ethers.parseEther('0.0005') });
+      const balance = await fundMe.fundersToAmount(firstAcct);
+      expect(balance).to.equal(ethers.parseEther('0.0005'));
+    });
+  });
+
+  describe('getFund', () => {
+    it('should only owner to call', async () => {
+      await fundMe.fund({ value: ethers.parseEther('0.004') });
+
+      // make sure the window is closed
+      await time.increase(200);
+      await mine();
+
+      await expect(fundMeSecondAcct.getFund()).to.be.revertedWith('Only owner can call this function');
+    });
   });
 });

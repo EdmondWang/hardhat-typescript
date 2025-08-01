@@ -1,7 +1,10 @@
 import { HardhatUserConfig } from 'hardhat/config';
 import { config as envConfig } from '@chainlink/env-enc';
 import '@nomicfoundation/hardhat-toolbox';
+import '@nomicfoundation/hardhat-ethers';
 import 'hardhat-deploy';
+import 'hardhat-deploy-ethers';
+
 import './tasks';
 
 envConfig();
